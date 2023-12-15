@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 12:19:24 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/12/15 15:04:14 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/12/15 16:49:08 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,44 +83,76 @@ void	open_map(const char *filename, const char **array)
 	close(fd);
 }
 
-int checkfirstandlastline(const char **map, const int count) 
+int checkBorder(const char **map) 
 {
     int i = 0;
+	int	len = ft_strlen(map[0]) - 2;
+	int	rows = 0;
 
+	while (map[rows] != NULL)
+		rows++;
     while (map[0][i] != '\n') 
 	{
-		if (map[0][i] != 49)
+		if (map[0][i] != '1' || map[rows -1][i] != '1')
 			return (0);
         i++;
     }
 	i = 0;
-	while (map[count-1][i] != '\n')
+	while (map[i])
 	{
-		if (map[0][i] != 49)
+		if (map[i][0] != '1' || map[i][len] != '1')
 			return (0);
 		i++;
 	}
     return (1);
 }
+/**
+int	checkfirstandlastcolumn(const char **map)
+{
+	int	len = ft_strlen(map[0]);
+	int	i = 0;
+	
+	len -= 2;
 
+	while (map[i])
+	{
+		if (map[i][0] != '1' || map[i][len] != '1')
+			return (0);
+		i++;
+	}
+	return (1);
+} **/
+
+int	checkRect(const char **map)
+{
+	int	rows;
+	int	columns;
+
+	rows = 0;
+	columns = 0;
+	while (map[rows] != NULL)
+		rows++;
+	while (map[0][columns] != '\n')
+		columns++;
+	printf("columns: %d\n", columns);
+	printf("rows: %d\n", rows); 
+	if (columns > rows)
+		return (1);
+	return (0);
+}
 int	main(int ac, char **av)
 {
 	const char	**map;
-	int	i = 0;
-	int	no_of_lines = 0;
 
 	if (ac == 2)
 	{
 		map = malloc(sizeof(char *) * (MAX_ROWS + 1));
 		open_map(av[1], map);
-		while (map[i] != NULL)
-		{
-			no_of_lines++;
-			i++;
-		}
-		// check if first line and last line is all 1s
-		int	checkresult = checkfirstandlastline(map, no_of_lines);
-		printf("%d", checkresult);
+		printf("%d\n", checkRect(map));
+		if (checkBorder(map))
+			printf("border is okay");
+		else
+			printf("border is not okay");
 	}
 }
 
