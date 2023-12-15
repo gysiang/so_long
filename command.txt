@@ -1,0 +1,3 @@
+gcc main.c gnl/get_next_line.c mlx/libmlx_Linux.a libft/libft.a -lX11 -lXext -lbsd -lm
+
+
