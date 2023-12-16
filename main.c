@@ -6,7 +6,7 @@
 /*   By: gyong-si <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 12:19:24 by gyong-si          #+#    #+#             */
-/*   Updated: 2023/12/15 16:49:08 by gyong-si         ###   ########.fr       */
+/*   Updated: 2023/12/16 10:59:14 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,59 @@ int	checkRect(const char **map)
 		return (1);
 	return (0);
 }
+
+int	checkAccess(const char **map, const int x, const int y)
+{
+	if (map[x - 1][y] == '0' || map[x + 1][y] == '0' 
+			|| map[x][y - 1] == '0' || map[x][y + 1] == '0')
+	{
+		return (1);
+	}
+	return (0);
+}
+
+void checkValidMap(const char **map)
+{
+	int	coins = 0;
+	int	map_exit = 0;
+	int	player = 0;
+	int	rows = 0;
+	int	i;
+
+	while (map[rows] != NULL)
+	{
+		i = 0;
+		while (map[rows][i] != '\n')
+		{
+			if (map[rows][i] == 'C')
+			{
+				if (checkAccess(map, rows, i))
+					coins++;
+				else
+					break;
+			}
+			if (map[rows][i] == 'E')
+			{
+				if (checkAccess (map, rows, i))
+					map_exit++;
+				else
+					break;
+			}
+			if (map[rows][i] == 'P')
+				player++;
+			i++;
+		}
+		rows++;
+	}
+	printf("coins: %d\n", coins);
+	printf("player: %d\n", player);
+	printf("map_exit: %d\n", map_exit);
+	if (map_exit == 1 && player == 1 && coins >= 1)
+		printf("This map is valid\n");
+	else
+		printf("This map is not valid\n");
+}
+
 int	main(int ac, char **av)
 {
 	const char	**map;
@@ -148,11 +201,7 @@ int	main(int ac, char **av)
 	{
 		map = malloc(sizeof(char *) * (MAX_ROWS + 1));
 		open_map(av[1], map);
-		printf("%d\n", checkRect(map));
-		if (checkBorder(map))
-			printf("border is okay");
-		else
-			printf("border is not okay");
+		checkValidMap(map);
 	}
 }
 
